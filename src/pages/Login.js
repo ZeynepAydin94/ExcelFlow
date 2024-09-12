@@ -1,30 +1,31 @@
-import React, { useContext, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useLogin } from '../hooks/useLogin';
-import { AppContext } from '../context/AppContext'; // Context API
-import { useDispatch } from 'react-redux'; // Redux için
-
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginUser, logoutUser } from '../store/userActions';
+import '../styles/Login.css'; // CSS dosyasını import ettik
+import { useLogin } from '../hooks/useLogin'; // useLogin hook'unu import ettik
 const Login = () => {
+  const dispatch = useDispatch();
+  const currentUser = useSelector((state) => state.user.currentUser);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const { login, loading, error } = useLogin();
-  const { loginUser } = useContext(AppContext); // Context API kullanımı
-  const dispatch = useDispatch(); // Redux dispatch
-  const navigate = useNavigate();
-
+  const { login, loading, error } = useLogin(); // useLogin hook'unu kullanıyoruz
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const userData = await login(username, password);
-    if (userData) {
-      // Context API ile kullanıcıyı yönet
-      loginUser(userData);
-
-      // Redux ile kullanıcıyı store'a ekle
-      dispatch({ type: 'SET_USER', payload: userData });
-
-      navigate('/dashboard'); // Login sonrası dashboard'a yönlendir
+    
+    try {
+      const userData = await login(username, password);
+      if (userData) {
+        dispatch(loginUser(userData)); // Redux'a loginUser eylemini dispatch ediyoruz
+      }
+    } catch (err) {
+      // Handle error if necessary
     }
   };
+
+  const handleLogout = () => {
+    dispatch(logoutUser());
+  };
+
 
   return (
     <div className="login-container">
@@ -45,8 +46,14 @@ const Login = () => {
           required
         />
         <button type="submit" disabled={loading}>Login</button>
-        {error && <p>{error}</p>}
+        {error && <p style={{ color: 'red' }}>{error}</p>}
       </form>
+      {currentUser && (
+        <div>
+          <p>Welcome, {currentUser.name}</p>
+          <button onClick={handleLogout}>Logout</button>
+        </div>
+      )}
     </div>
   );
 };
