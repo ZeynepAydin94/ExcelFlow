@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'https://api.example.com';  // API'nin temel URL'si
+const API_BASE_URL = 'http://localhost:5230/api';  // API'nin temel URL'si
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -10,9 +10,9 @@ const api = axios.create({
 });
 
 // GET isteği
-export const getRequest = async (endpoint) => {
+export const getRequest = async (endpoint, header) => {
   try {
-    const response = await api.get(endpoint);
+    const response = await api.get(endpoint, header);
     return response.data;
   } catch (error) {
     console.error('GET request error:', error);
@@ -21,9 +21,9 @@ export const getRequest = async (endpoint) => {
 };
 
 // POST isteği
-export const postRequest = async (endpoint, data) => {
+export const postRequest = async (endpoint, data, header) => {
   try {
-    const response = await api.post(endpoint, data);
+    const response = await api.post(endpoint, data, header);
     return response.data;
   } catch (error) {
     console.error('POST request error:', error);
