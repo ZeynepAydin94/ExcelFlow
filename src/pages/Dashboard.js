@@ -3,6 +3,7 @@ const Dashboard = () => {
     return (
         <div >
             <div>
+                <p>Welcome</p>
                 {/* <p>Welcome, {currentUser.firstName}</p> */}
             </div>
 

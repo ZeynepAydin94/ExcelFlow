@@ -25,7 +25,7 @@ export const useLogin = () => {
             Authorization: `Bearer ${token}`, // Token'ı header'a ekliyoruz
           },
         });
-
+        localStorage.setItem('user', JSON.stringify(userResponse));
         // Kullanıcı bilgilerini Redux'a kaydediyoruz
         dispatch(loginUser(userResponse));
 

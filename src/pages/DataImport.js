@@ -25,7 +25,7 @@ const ExcelUploadPage = () => {
 
     return (
         <div className="container mt-5">
-            <div className="card shadow">
+            {/* <div className="card shadow">
                 <div className="card-header bg-primary text-white">
                     <h4>Upload Excel File</h4>
                 </div>
@@ -53,7 +53,7 @@ const ExcelUploadPage = () => {
                         </div>
                     )}
                 </div>
-            </div>
+            </div> */}
         </div>
     );
 };

@@ -14,6 +14,29 @@ const Login = () => {
     }
   }, [currentUser, navigate]);
   const dispatch = useDispatch();
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const user = localStorage.getItem("user");
+
+    if (token && user) {
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1])); // JWT payload
+        const exp = payload.exp * 1000;
+        const now = Date.now();
+
+        if (exp > now) {
+          dispatch(loginUser(JSON.parse(user)));
+        } else {
+          localStorage.removeItem("token");
+          localStorage.removeItem("user");
+        }
+      } catch (err) {
+        console.error("Token parse error", err);
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+      }
+    }
+  }, [dispatch]);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const { login, loading, error } = useLogin(); // useLogin hook'unu kullanıyoruz
