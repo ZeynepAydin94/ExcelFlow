@@ -7,7 +7,10 @@ const Sidebar = () => {
     return (
         <div className={`sidebar open bg-dark text-white`}>
             <div className="sidebar-header align-items-center p-3">
-                <h3>Excel Flow</h3>
+                <div className="fw-bold fs-4">
+                    <i className="bi bi-box-arrow-in-down-right me-2"></i>ExcelFlow
+                </div>
+
             </div>
             <nav className="sidebar-menu">
                 <ul className="list-unstyled">

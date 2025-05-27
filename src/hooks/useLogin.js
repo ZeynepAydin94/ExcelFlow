@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import { getRequest, postRequest } from '../services/apiService'; // API servis fonksiyonunu daha sonra ekleyeceğiz
-import { useDispatch } from 'react-redux';
-import { loginUser } from '../store/userActions'; // Redux action'ı
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { loginUser } from "../store/userActions";
+import { authService } from "../services/authService";
 
 export const useLogin = () => {
   const [loading, setLoading] = useState(false);
@@ -10,32 +10,26 @@ export const useLogin = () => {
 
   const login = async (email, password) => {
     setLoading(true);
+    setError(null);
+
     try {
-      // Token almak için API çağrısı yapıyoruz
-      const response = await postRequest('/Auth/token', { email, password });
-      const token = response?.token; // Token'ı alıyoruz
+      const tokenResponse = await authService.login(email, password);
+      const token = tokenResponse?.token;
 
-      if (token) {
-        // Token'ı localStorage'a kaydediyoruz
-        localStorage.setItem('token', token);
+      if (!token) throw new Error("Token alınamadı");
 
-        // Kullanıcı bilgilerini almak için API çağrısı yapıyoruz
-        const userResponse = await getRequest('/Auth/user', {
-          headers: {
-            Authorization: `Bearer ${token}`, // Token'ı header'a ekliyoruz
-          },
-        });
-        localStorage.setItem('user', JSON.stringify(userResponse));
-        // Kullanıcı bilgilerini Redux'a kaydediyoruz
-        dispatch(loginUser(userResponse));
+      localStorage.setItem("token", token);
 
-        setLoading(false);
-        return userResponse; // Kullanıcı bilgilerini döndürüyoruz
-      }
+      const user = await authService.fetchUser(token);
+      localStorage.setItem("user", JSON.stringify(user));
+
+      dispatch(loginUser(user));
+      return user;
     } catch (err) {
       setError(err.message);
-      setLoading(false);
       return null;
+    } finally {
+      setLoading(false);
     }
   };
 

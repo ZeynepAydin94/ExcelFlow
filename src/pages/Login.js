@@ -4,6 +4,9 @@ import { loginUser } from '../store/userActions';
 import '../styles/Login.css'; // CSS dosyasını import ettik
 import { useLogin } from '../hooks/useLogin'; // useLogin hook'unu import ettik
 import { useNavigate } from 'react-router-dom';
+import TextInput from "../components/form/TextInput";
+import PasswordInput from "../components/form/PasswordInput";
+import Button from "../components/form/Button";
 const Login = () => {
   const navigate = useNavigate();
 
@@ -58,35 +61,33 @@ const Login = () => {
   return (
     <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
       <div className="card p-4 shadow" style={{ width: "400px" }}>
-        <h2 className="text-center mb-4">Login</h2>
+        <div className="fw-bold fs-2 text-center mb-4">
+          <i className="bi bi-box-arrow-in-down-right me-2"></i>ExcelFlow
+        </div>
         <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="email" >
-              Email Address
-            </label>
-            <input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-              className='form-control'
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="password" >
-              Password
-            </label>
-            <input
-              className='form-control'
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
-          <div className="d-grid">
-            <button type="submit" className='btn btn-success' disabled={loading}>Login</button>
-          </div>
+
+          <TextInput
+            label="Email"
+            name="username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            autoComplete="username"
+          />
+
+          <PasswordInput
+            label="Şifre"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <Button
+            type="submit"
+            variant="success"
+            className="w-100"
+            loading={loading}
+            disabled={loading}
+          >
+            Giriş Yap
+          </Button>
           {error && <p style={{ color: 'red' }}>{error}</p>}
         </form>
       </div>

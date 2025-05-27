@@ -5,31 +5,34 @@ import MasterLayout from './layouts/MasterLayout'; // MasterLayout sayfasını i
 import DataImport from './pages/DataImport'; // DataImport sayfasını içeri aktar
 import 'bootstrap/dist/css/bootstrap.min.css'; // Bootstrap CSS dosyasını içeri aktar
 import ProtectedRoute from './components/ProtectedRoute';
+import { ModalProvider } from './components/modal/ModalProvider'; // ModalProvider'ı içeri aktar
 function App() {
   return (
-    <Router>
-      <Routes>
-        {/* Herkese açık login sayfası */}
-        <Route path="/login" element={<Login />} />
+    <ModalProvider>
+      <Router>
+        <Routes>
+          {/* Herkese açık login sayfası */}
+          <Route path="/login" element={<Login />} />
 
-        {/* Tüm korumalı sayfalar MasterLayout altında */}
-        <Route
-          path="/"
-          element={
-            <ProtectedRoute>
-              <MasterLayout />
-            </ProtectedRoute>
-          }
-        >
-          {/* İçerik sayfaları */}
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="dataimport" element={<DataImport />} />
-        </Route>
+          {/* Tüm korumalı sayfalar MasterLayout altında */}
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <MasterLayout />
+              </ProtectedRoute>
+            }
+          >
+            {/* İçerik sayfaları */}
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="dataimport" element={<DataImport />} />
+          </Route>
 
-        {/* Geçersiz path'ler için yönlendirme */}
-        <Route path="*" element={<Navigate to="/login" />} />
-      </Routes>
-    </Router>
+          {/* Geçersiz path'ler için yönlendirme */}
+          <Route path="*" element={<Navigate to="/login" />} />
+        </Routes>
+      </Router>
+    </ModalProvider>
   );
 }
 

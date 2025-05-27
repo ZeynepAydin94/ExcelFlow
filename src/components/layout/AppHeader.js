@@ -1,43 +1,45 @@
-
-// const AppHeader = () => {
-//     return (
-//         <header className="bg-dark text-white p-3 ">
-//             {/* Logo */}
-//             <div className="logo">
-//             </div>
-
-//         </header>
-//     );
-// };
-
-// export default AppHeader;
-
-
-import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { logoutUser } from '../../store/userActions'; // logoutUser action'ını import et
-
+import { useLogout } from "../../hooks/useLogout";
+import Button from "../form/Button";
+import { useModal } from "../../hooks/useModal";
 const AppHeader = () => {
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
+    const logout = useLogout(); // sadece iş yapar (token sil, redirect)
+    const { showModal, hideModal } = useModal(); // UI sorumluluğu burada
 
     const handleLogout = () => {
-        dispatch(logoutUser());
-        localStorage.removeItem("token"); // varsa token’ı sil
-        navigate("/login");
+        showModal({
+            title: "Çıkış Yap",
+            children: <p>Oturumu kapatmak istediğinize emin misiniz?</p>,
+            footer: (
+                <>
+                    <Button variant="secondary" onClick={hideModal}>
+                        Vazgeç
+                    </Button>
+                    <Button
+                        variant="danger"
+                        onClick={() => {
+                            logout();
+                            hideModal();
+                        }}
+                    >
+                        Çıkış Yap
+                    </Button>
+                </>
+            ),
+        });
     };
 
     return (
-        <header className="bg-dark text-white px-4 py-3 d-flex justify-content-between align-items-center">
-            {/* Logo veya Başlık */}
-            <div className="fw-bold fs-4">
-                ExcelFlow {/* buraya kendi logo ya da başlığını yaz */}
-            </div>
+        <header className="bg-dark text-white px-4 py-3 d-flex align-items-center justify-content-between shadow-sm">
 
-            {/* Logout butonu */}
-            <button className="btn btn-outline-light" onClick={handleLogout}>
+
+            <Button
+                onClick={handleLogout}
+                variant="outline-light"
+                className="ms-auto"
+            >
+                <i className="bi bi-box-arrow-right me-2"></i>
                 Çıkış Yap
-            </button>
+            </Button>
         </header>
     );
 };

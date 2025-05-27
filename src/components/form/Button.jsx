@@ -1,13 +1,21 @@
-// src/components/ui/Button.jsx
-const Button = ({ children, variant = "primary", size = "", disabled, onClick, type = "button" }) => {
+const Button = ({
+    children,
+    variant = "primary",
+    size = "",
+    type = "button",
+    onClick,
+    disabled = false,
+    loading = false,
+    className = "",
+}) => {
     return (
         <button
-            className={`btn btn-${variant} ${size ? `btn-${size}` : ""}`}
-            onClick={onClick}
-            disabled={disabled}
             type={type}
+            className={`btn btn-${variant} ${size ? `btn-${size}` : ""} ${className}`}
+            onClick={onClick}
+            disabled={disabled || loading}
         >
-            {children}
+            {loading ? "Yükleniyor..." : children}
         </button>
     );
 };
