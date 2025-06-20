@@ -1,5 +1,6 @@
 import { postRequest } from "./apiService";
-export const notifyBackend = async (fileUrl) => {
+import { endpoints } from "./api";
+export const notifyBackend = async (fileName) => {
     const token = localStorage.getItem("token");
     const headers = {
         headers: {
@@ -7,5 +8,5 @@ export const notifyBackend = async (fileUrl) => {
         },
     };
 
-    // return await postRequest("/import/submit-url", { fileUrl }, headers);
+    return await postRequest(endpoints.import, "/import/CreateUploadJob", { fileName }, headers);
 };

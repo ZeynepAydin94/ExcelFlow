@@ -1,54 +1,54 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:5230/api';  // API'nin temel URL'si
-
-const api = axios.create({
-  baseURL: API_BASE_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
+// Her çağrıda yeni bir axios instance üretir
+const createApi = (baseUrl) =>
+  axios.create({
+    baseURL: baseUrl,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
 
 // GET isteği
-export const getRequest = async (endpoint, header) => {
+export const getRequest = async (baseUrl, endpoint, config = {}) => {
   try {
-    const response = await api.get(endpoint, header);
+    const response = await createApi(baseUrl).get(endpoint, config);
     return response.data;
   } catch (error) {
     console.error('GET request error:', error);
-    throw error;
+    throw error?.response?.data || error;
   }
 };
 
 // POST isteği
-export const postRequest = async (endpoint, data, header) => {
+export const postRequest = async (baseUrl, endpoint, data = {}, config = {}) => {
   try {
-    const response = await api.post(endpoint, data, header);
+    const response = await createApi(baseUrl).post(endpoint, data, config);
     return response.data;
   } catch (error) {
     console.error('POST request error:', error);
-    throw error;
+    throw error?.response?.data || error;
   }
 };
 
 // PUT isteği
-export const putRequest = async (endpoint, data) => {
+export const putRequest = async (baseUrl, endpoint, data = {}, config = {}) => {
   try {
-    const response = await api.put(endpoint, data);
+    const response = await createApi(baseUrl).put(endpoint, data, config);
     return response.data;
   } catch (error) {
     console.error('PUT request error:', error);
-    throw error;
+    throw error?.response?.data || error;
   }
 };
 
 // DELETE isteği
-export const deleteRequest = async (endpoint) => {
+export const deleteRequest = async (baseUrl, endpoint, config = {}) => {
   try {
-    const response = await api.delete(endpoint);
+    const response = await createApi(baseUrl).delete(endpoint, config);
     return response.data;
   } catch (error) {
     console.error('DELETE request error:', error);
-    throw error;
+    throw error?.response?.data || error;
   }
 };

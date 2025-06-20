@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { uploadToS3 } from "../services/s3Service";
-import { notifyBackend } from "../services/importService"; // backend'e URL gönderme
+import { getPreSignedUrl, putFileToS3 } from "../services/preSignedService";
+import { notifyBackend } from "../services/importService"; // varsa kullan, yoksa çıkar
 
 export const useS3Uploader = () => {
     const [status, setStatus] = useState("");
@@ -13,15 +13,22 @@ export const useS3Uploader = () => {
         }
 
         setLoading(true);
-        setStatus("Yükleniyor...");
+        setStatus("Upload başlatıldı...");
 
         try {
-            const s3Result = await uploadToS3(file);
-            await notifyBackend(s3Result.Location); // backend'e dosya URL'si gönder
-            setStatus("Yükleme ve bildirim başarılı ✅");
+            // 1. Pre-signed URL al
+            const { url, fileName } = await getPreSignedUrl();
+
+            // 2. Dosyayı S3'e yükle
+            await putFileToS3(file, url);
+
+            // 3. (İsteğe bağlı) Backend'e yüklenen dosyanın adını bildir
+            await notifyBackend(fileName);
+
+            setStatus("✅ Dosya başarıyla yüklendi.");
         } catch (err) {
             console.error(err);
-            setStatus("Yükleme hatası: " + err.message);
+            setStatus("❌ Hata: " + err.message);
         } finally {
             setLoading(false);
         }
